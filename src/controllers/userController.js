@@ -30,7 +30,7 @@ export async function createUser(req, res) {
           return res.status(409).send('Email já cadastrado.')
       }
   
-      const senhaCriptografada = bcrypt.hashSync(signin.password, 10);
+    const senhaCriptografada = bcrypt.hashSync(signin.password, 10);
     
     await connection.query('INSERT INTO users ("name", "email", "password") VALUES ($1, $2, $3)', [signin.name, signin.email,senhaCriptografada])
     
@@ -44,25 +44,36 @@ export async function createUser(req, res) {
 export async function loginUser(req, res) {
   const userLogin = req.body;
   const validation = userSchema.validate(userLogin, {abortEarly: false});
-
+  
   if (validation.error) {
     const message =  validation.error.details.map(e => e.message);
     return res.status(422).send(message);
   }
+  
+  const {rows: verifiedEmail} = await connection.query('SELECT * FROM users WHERE email = $1', [userLogin.email])
+  console.log(verifiedEmail)
+  const emailsRegistered = verifiedEmail.map(e => e.email);
+  const repeatEmail = emailsRegistered.find(e => e == userLogin.email)
 
-  const verifiedEmail = await connection.query('SELECT * FROM user WHERE email = $1', [userLogin.email])
-
-
-
-
-  const secretKey = process.env.JWT_SECRET
-
-
-  if (user && bcrypt.compareSync(userbody.password, user.password)) {
-    const token = jwt.sing({id: id.userbody, secretKey});
-   
-    return res.status(201).send({ token, id: id.userbody});
-  } else {
-    return res.status(401).send('Senha ou email incorretos!');
+  if(!repeatEmail){
+    return res.status(401).send('Email ou senha incorretos.')
   }
+
+  const decryptedPassword = bcrypt.compareSync(userLogin.password, verifiedEmail[0].password);
+ 
+  if(!decryptedPassword){
+      return res.status(401).send('Email ou senha incorretos.')
+  }
+
+  const idUser = verifiedEmail[0].id
+  const secretKey = process.env.JWT_SECRET
+  const dados = {id: idUser}
+  
+if (repeatEmail && decryptedPassword) {
+    const token = jwt.sign(dados, secretKey);
+   console.log(token)
+    return res.status(201).send(token);
+  } 
+
+  
 }
