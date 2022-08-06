@@ -51,7 +51,7 @@ export async function loginUser(req, res) {
   }
   
   const {rows: verifiedEmail} = await connection.query('SELECT * FROM users WHERE email = $1', [userLogin.email])
-  console.log(verifiedEmail)
+  
   const emailsRegistered = verifiedEmail.map(e => e.email);
   const repeatEmail = emailsRegistered.find(e => e == userLogin.email)
 
@@ -66,13 +66,21 @@ export async function loginUser(req, res) {
   }
 
   const idUser = verifiedEmail[0].id
+  const idEmail = verifiedEmail[0].email
   const secretKey = process.env.JWT_SECRET
   const dados = {id: idUser}
   
 if (repeatEmail && decryptedPassword) {
     const token = jwt.sign(dados, secretKey);
-   console.log(token)
-    return res.status(201).send(token);
+  
+   return res.status(200).json({
+    user:{
+        id:idUser,
+        email:idEmail
+    },
+    token,
+});
+console.log(user)
   } 
 
   
