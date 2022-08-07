@@ -6,6 +6,7 @@ import connection from '../dbStrategy/postgres.js';
 
 export async function createUser(req, res) {
   const signin = req.body;
+  
   const signinSchema = joi.object({
     name: joi.string().required(),
     email: joi.string().email().required(),
@@ -80,7 +81,7 @@ if (repeatEmail && decryptedPassword) {
     },
     token,
 });
-console.log(user)
+
   } 
 
   
