@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import userRouter from './routers/userRouters.js';
-import urlsRouters from './routers/urlsRouters.js'
+import authRouter from './routers/authRouter.js';
+import urlsRouters from './routers/urlsRouter.js';
+import usersRouters from './routers/userRouter.js'
 
 dotenv.config();
 
@@ -10,8 +11,10 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 
-server.use(userRouter)
+server.use(authRouter)
 server.use(urlsRouters)
+server.use(usersRouters)
+server.use(ranking)
 
 const PORT = process.env.PORT
 server.listen(PORT, () => console.log("Server in process"))
