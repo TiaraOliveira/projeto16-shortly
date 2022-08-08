@@ -17,5 +17,6 @@ server.use(urlsRouters)
 server.use(usersRouters)
 server.use(rankingRouter)
 
-const PORT = process.env.PORT
-server.listen(PORT, () => console.log("Server in process"))
+app.listen(process.env.PORT, () => {
+    console.log("Server running on port " + process.env.PORT);
+});
