@@ -14,25 +14,18 @@ export async function shorten(req, res) {
    });
 
     const validation = urlSchema.validate(urlBody);
-   
-    if (validation.error) {
+     if (validation.error) {
       const message =  validation.error.details.map(e => e.message);
       console.log(message)
       return res.status(422).send(message);
     }
     const short = nanoid(6)
     const url = urlBody.url
-    
-
+ 
     try {
-       const { rowCount } = await connection.query(
-      'SELECT * FROM urls WHERE url = $1',
-      [url]
-    );
+       const { rowCount } = await connection.query('SELECT * FROM urls WHERE url = $1',[url]);
 
-    if (rowCount > 0) {
-      return res.sendStatus(409);
-    }
+    if (rowCount > 0) {return res.sendStatus(409);}
 
       await connection.query('INSERT INTO urls ("shortURL", "url", "userId") VALUES ($1, $2, $3)', [short, url, id])
 
@@ -52,7 +45,9 @@ export async function getShortenbyId(req, res) {
    
       if (rowCount === 0) {
         return res.sendStatus(404)
-      }   res.status(200).send(customer[0]);
+      }  
+
+      res.status(200).send({"id": customer[0].id, "shortUrl": customer[0].shortURL,"url": customer[0].url});
     } catch (error) {
     
       res.status(500).send(error); 
