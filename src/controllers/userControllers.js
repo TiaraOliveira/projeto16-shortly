@@ -14,7 +14,7 @@ export async function getUserUrls(req, res){
                 ),
                 'shortenedUrls',    jsonb_build_object(
                              'id', urls.id,
-                             'shortUrl', urls."shortUrl",
+                             'shortURL', urls."shortUrl",
                              'url', urls.url,
                              'visitCount', urls."visitCount"
                              ) 
