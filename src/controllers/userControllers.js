@@ -24,9 +24,7 @@ export async function getUserUrls(req, res){
                   WHERE users."id" = $1;`, [id]
            )
         res.send(rental);
-       console.log(rental)
- 
-     
+
      } catch (error) {
          res.status(500).send("Erro no servidor")
      }
