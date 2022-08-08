@@ -2,7 +2,6 @@ import connection from '../dbStrategy/postgres.js';
 import jwt from 'jsonwebtoken';
 
 export async function getUserUrls(req, res){
-    const token = req.headers.authorization.split(' ')[1]
     console.log(token)
     const secretKey = process.env.JWT_SECRET;
     const {id} = jwt.verify(token,secretKey)
