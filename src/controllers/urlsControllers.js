@@ -57,7 +57,7 @@ export async function redirect(req, res) {
     const { shortUrl } = req.params;
     
     try {
-      const { rows: customer, rowCount } = await connection.query(`SELECT * FROM urls WHERE "shortUrl" = $1`, [shortUrl]);
+      const { rows: customer, rowCount } = await connection.query(`SELECT * FROM urls WHERE "shortURL" = $1`, [shortUrl]);
      
       if (rowCount === 0) {
         res.sendStatus(404); // not found
