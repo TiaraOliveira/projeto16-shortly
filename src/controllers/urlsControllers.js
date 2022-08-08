@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 export async function shorten(req, res) {
 
-    const url = req.body;
+    const urlBody = req.body;
     const token = req.headers.authorization.split(' ')[1]
     const secretKey = process.env.JWT_SECRET;
     const {id} = jwt.verify(token,secretKey)
@@ -14,7 +14,7 @@ export async function shorten(req, res) {
     url: joi.string().uri().required()
    });
 
-    const validation = urlSchema.validate(url);
+    const validation = urlSchema.validate(urlBody);
    
     if (validation.error) {
       const message =  validation.error.details.map(e => e.message);
@@ -22,10 +22,12 @@ export async function shorten(req, res) {
       return res.status(422).send(message);
     }
     const short = nanoid(6)
-  
+    const url = urlBody.url
+    console.log(url)
     try {
-      await connection.query('INSERT INTO urls ("shortUrl", url, "userId") VALUES ($1, $2, $3)', [short, url, id])
-    
+      
+      await connection.query('INSERT INTO urls ("shortUrl", "url", "userId") VALUES ($1, $2, $3)', [short, url, id])
+
       res.sendStatus(201)
         } catch (error) {
         console.log(error);
@@ -39,7 +41,7 @@ export async function getShortenbyId(req, res) {
       const { rows: customer, rowCount } = await connection.query(`SELECT * FROM urls WHERE id = $1`, [id]);
    
       if (rowCount === 0) {
-        res.sendStatus(404); // not found
+        return res.sendStatus(404)
       }   res.status(200).send(customer[0]);
     } catch (error) {
     
@@ -57,6 +59,7 @@ export async function redirect(req, res) {
       } 
 
       const url = customer[0].url
+      console.log(url)
       res.redirect(url)
     } catch (error) {
         res.sendStatus(500);

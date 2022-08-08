@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { getUserUrls} from "../controllers/userControllers.js";
-import validateUser from '../middlewares/validateusers.js';
+import { ranking} from "../controllers/rankingController.js";
+
 
 const router = Router();
 
-router.get('/users/me',validateUser, getUserUrls)
+router.get('/ranking', ranking)
 
 export default router;
