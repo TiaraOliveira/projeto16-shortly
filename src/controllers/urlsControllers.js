@@ -62,13 +62,11 @@ export async function redirect(req, res) {
       if (rowCount === 0) {
         res.sendStatus(404); // not found
       } 
+      const newVisitCount = parseInt(customer[0].visitCount) + 1;
+
       await connection.query(
         `
-        UPDATE urls 
-        SET "visitCount" = "visitCount" + 1
-        WHERE urls.shortURL = $1    
-      `,
-        [shortUrl]
+        UPDATE urls SET "visitCount" = $1 WHERE "shortURL" = $2;`, [newVisitCount, shortUrl]
       );
 
       const url = customer[0].url
