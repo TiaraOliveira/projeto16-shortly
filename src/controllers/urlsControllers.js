@@ -66,7 +66,7 @@ export async function redirect(req, res) {
         `
         UPDATE urls 
         SET "visitCount" = "visitCount" + 1
-        WHERE shortURL = $1    
+        WHERE urls.shortURL = $1    
       `,
         [shortUrl]
       );
