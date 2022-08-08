@@ -54,6 +54,7 @@ export async function getShortenbyId(req, res) {
     }
 }
 export async function redirect(req, res) {
+  console.log("aqui")
     const { shortUrl } = req.params;
     
     try {

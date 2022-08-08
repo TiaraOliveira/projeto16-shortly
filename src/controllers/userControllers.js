@@ -15,7 +15,7 @@ export async function getUserUrls(req, res){
                 ),
                 'shortenedUrls',    jsonb_build_object(
                              'id', urls.id,
-                             'short', urls."shortURL",
+                             'shortUrl', urls."shortUrl",
                              'url', urls.url,
                              'visitCount', urls."visitCount"
                              ) 
@@ -23,15 +23,10 @@ export async function getUserUrls(req, res){
                   join urls on urls."userId" = users."id"
                   WHERE users."id" = $1;`, [id]
            )
-           const urlsArray = rental.map(e => e = e.json_build_object);
-           const shortenedUrls = urlsArray.map(e => e.shortenedUrls);
-           
-           const result = {
-               id: urlsArray[0].id,
-               name: urlsArray[0].name,
-               visitCount: urlsArray[0].visitCount,
-               shortenedUrls: shortenedUrls
-           }
+       res.send(rental);
+       console.log(rental)
+
+
            console.log(result);
    
            res.status(200).send(result);
