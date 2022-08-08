@@ -26,6 +26,6 @@ export async function getUserUrls(req, res){
         res.send(rental);
 
      } catch (error) {
-         res.status(500).send("Erro no servidor")
+         res.status(500).send(error)
      }
 }
