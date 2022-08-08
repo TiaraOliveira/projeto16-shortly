@@ -23,8 +23,18 @@ export async function getUserUrls(req, res){
                   join urls on urls."userId" = users."id"
                   WHERE users."id" = $1;`, [id]
            )
-        res.send(rental);
-
+           const urlsArray = rental.map(e => e = e.json_build_object);
+           const shortenedUrls = urlsArray.map(e => e.shortenedUrls);
+           
+           const result = {
+               id: urlsArray[0].id,
+               name: urlsArray[0].name,
+               visitCount: urlsArray[0].visitCount,
+               shortenedUrls: shortenedUrls
+           }
+           console.log(result);
+   
+           res.status(200).send(result);
      } catch (error) {
          res.status(500).send(error)
      }
