@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid'
 import jwt from 'jsonwebtoken';
 
 export async function shorten(req, res) {
-
     const urlBody = req.body;
     const token = req.headers.authorization.split(' ')[1]
     const secretKey = process.env.JWT_SECRET;
@@ -23,9 +22,18 @@ export async function shorten(req, res) {
     }
     const short = nanoid(6)
     const url = urlBody.url
-    console.log(url)
+    
+
     try {
-      
+       const { rowCount } = await connection.query(
+      'SELECT * FROM urls WHERE url = $1',
+      [url]
+    );
+
+    if (rowCount > 0) {
+      return res.sendStatus(409);
+    }
+
       await connection.query('INSERT INTO urls ("shortURL", "url", "userId") VALUES ($1, $2, $3)', [short, url, id])
 
       res.status(201).send({
