@@ -75,7 +75,7 @@ export async function redirect(req, res) {
       console.log(url)
       res.redirect(url)
     } catch (error) {
-        res.sendStatus(500);
+        res.status(500).send(error);
     }
 }
   
