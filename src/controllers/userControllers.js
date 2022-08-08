@@ -7,28 +7,22 @@ export async function getUserUrls(req, res){
     const secretKey = process.env.JWT_SECRET;
     const {id} = jwt.verify(token,secretKey)
     try {
-        const {rows:rental} = await connection.query(
+        const {rows:urls} = await connection.query(
             `
-            SELECT  json_build_object(
-                'id', users.id,
-                'name', users.name
-                ),
-                'shortenedUrls',    jsonb_build_object(
-                             'id', urls.id,
-                             'shortUrl', urls."shortUrl",
-                             'url', urls.url,
-                             'visitCount', urls."visitCount"
-                             ) 
-                  FROM users
-                  join urls on urls."userId" = users."id"
-                  WHERE users."id" = $1;`, [id]
+            SELECT id, "shortURL", url, "visitCount" FROM "urls" WHERE "userId"=$1
+            `, [id]
            )
-       res.send(rental);
-       console.log(rental)
+        let sum = 0;
+        urls.map(url => sum += url.visitCount)
+        const{rows:users} = await connection.query(`SELECT * FROM users WHERE id = $1`, [id])
 
 
-           console.log(result);
-   
+        const result = {
+            "id": users[0].id,
+            "name":users[0].name,
+            "visitCount": sum,
+            "shortenetCount": urls
+        }
            res.status(200).send(result);
      } catch (error) {
          res.status(500).send(error)
