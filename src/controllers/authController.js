@@ -30,7 +30,6 @@ export async function createUser(req, res) {
       if(repeatEmail){
           return res.status(409).send('Email já cadastrado.')
       }
-  
     const senhaCriptografada = bcrypt.hashSync(signin.password, 10);
     
     await connection.query('INSERT INTO users ("name", "email", "password") VALUES ($1, $2, $3)', [signin.name, signin.email,senhaCriptografada])
@@ -81,8 +80,6 @@ if (repeatEmail && decryptedPassword) {
     },
     token,
 });
-
   } 
-
-  
+ 
 }
