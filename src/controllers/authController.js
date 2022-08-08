@@ -6,12 +6,12 @@ import connection from '../dbStrategy/postgres.js';
 
 export async function createUser(req, res) {
   const signin = req.body;
-  
+  console.log(signin)
   const signinSchema = joi.object({
     name: joi.string().required(),
     email: joi.string().email().required(),
     password: joi.string().min(5).max(15).required(),
-    password_confirmation: joi.any().valid(joi.ref('password')).required()
+    confirmPassword: joi.any().valid(joi.ref('password')).required()
     });
 
     const validation = signinSchema.validate(signin);
