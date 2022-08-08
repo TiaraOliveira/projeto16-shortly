@@ -26,9 +26,11 @@ export async function shorten(req, res) {
     console.log(url)
     try {
       
-      await connection.query('INSERT INTO urls ("shortUrl", "url", "userId") VALUES ($1, $2, $3)', [short, url, id])
+      await connection.query('INSERT INTO urls ("shortURL", "url", "userId") VALUES ($1, $2, $3)', [short, url, id])
 
-      res.sendStatus(201)
+      res.status(201).send({
+ shortUrl: xxxxx
+} )
         } catch (error) {
         console.log(error);
         res.sendStatus(500); 
